@@ -14,43 +14,43 @@ def main():
     driver = webdriver.Chrome(service = Service("C:\\Radu\\chromedriver_win32_105\\chromedriver.exe"), options = chrome_options)
     driver.get("https://music.youtube.com/")
     #time.sleep(10)
-    tryAgain = 1;
+    tryAgain = 1
     while tryAgain:
         try:
             buttonNext = driver.find_element(By.XPATH, "/html/body/ytmusic-app/ytmusic-app-layout/ytmusic-player-bar/div[1]/div/tp-yt-paper-icon-button[5]")
-            tryAgain = 0;
+            tryAgain = 0
         except Exception as e:
             print("ButtonNext not found!")
-            tryAgain = 1;
-            time.sleep(1);
+            tryAgain = 1
+            time.sleep(1)
 
 
-    tryAgain = 1;
+    tryAgain = 1
     while tryAgain:
         try:
             buttonPrev = driver.find_element(By.XPATH, "/html/body/ytmusic-app/ytmusic-app-layout/ytmusic-player-bar/div[1]/div/tp-yt-paper-icon-button[1]")
-            tryAgain = 0;
+            tryAgain = 0
         except Exception as e:
             print("ButtonPrev not found!")
-            tryAgain = 1;
-            time.sleep(1);
+            tryAgain = 1
+            time.sleep(1)
 
 
     while(1):
         cmd = input("Give command: ")
         if cmd == 'n' :
             try:
-                buttonNext.click();
+                buttonNext.click()
             except Exception as e:
                 print("Can't press buttonNext")
         if cmd == 'p' :
             try:
-                buttonPrev.click();
+                buttonPrev.click()
             except Exception as e:
                 print("Can't press buttonPrev")
         if cmd == 'q':
             driver.quit()
-            break;
+            break
         
 if __name__ == '__main__':
     main()
