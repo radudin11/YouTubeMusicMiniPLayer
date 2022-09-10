@@ -34,7 +34,16 @@ def isDriverClosed(driver):
             return True
         else:
             return False
+
+def pressButton(button):
+    try:
+        button.click()
+        return True
+    except Exception as e:
+        print("Can't press button")
+        return False
 def main():
+
     volumeOptionsIsClicked = False
 
     driver = driver_setup()
@@ -44,40 +53,24 @@ def main():
     buttonMute = get_button(driver=driver, xpath="/html/body/ytmusic-app/ytmusic-app-layout/ytmusic-player-bar/div[3]/ytmusic-player-expanding-menu/tp-yt-paper-icon-button[1]/tp-yt-iron-icon")
     buttonVolumeOptions = get_button(driver=driver, xpath="/html/body/ytmusic-app/ytmusic-app-layout/ytmusic-player-bar/div[3]/div/tp-yt-paper-icon-button[4]/tp-yt-iron-icon")
     while 1:
-        buttonWasPressed = False
         cmd = input("Give command: ")
         if cmd == 'n' :
-            try:
-                buttonNext.click()
-            except Exception as e:
-                print("Can't press buttonNext")
-            buttonWasPressed = True
+            pressButton(buttonNext)
+            continue
         if cmd == 'p' :
-            try:
-                buttonPrev.click()
-            except Exception as e:
-                print("Can't press buttonPrev")
-            buttonWasPressed = True
+            pressButton(buttonPrev)
+            continue
         if cmd == 'P' :
-            try:
-                buttonPlayPause.click()
-            except Exception as e:
-                print("Can't press buttonPlayPause")
-            buttonWasPressed = True
+            pressButton(buttonPlayPause)
+            continue
         if cmd == 'm' :
-            try:
-                if volumeOptionsIsClicked == False :
-                    buttonVolumeOptions.click()
-                    volumeOptionsIsClicked = True
-                # time.sleep(1)
-                buttonMute.click()
-            except Exception as e:
-                print("Can't press buttonMute")
-            buttonWasPressed = True
+            if volumeOptionsIsClicked == False:
+                volumeOptionsIsClicked = pressButton(buttonVolumeOptions)
+            pressButton(buttonMute)
+            continue
         if cmd == 'q':
             break
-        if buttonWasPressed == False:
-            print("Button unrecognised")
+        print("Button unrecognised")
 
     driver.quit()
 if __name__ == '__main__':
