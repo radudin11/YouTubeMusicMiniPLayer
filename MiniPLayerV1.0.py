@@ -13,6 +13,8 @@ import subprocess
 
 
 def get_element(xpath = "", driver = NULL):
+    # searches for an element from the web driver 
+    # at the given xpath
     tryAgain = 50
     while tryAgain:
         try:
@@ -25,6 +27,8 @@ def get_element(xpath = "", driver = NULL):
     return button
 
 def driver_setup():
+    # sets all the options for the chrome driver, opens it
+    # and returns
     chrome_options = Options()
     chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--verbose")
@@ -42,21 +46,14 @@ def isDriverClosed(driver):
             return False
 
 def pressButton(button):
+    # tries to call .click() method on the elemnt given
+    # returns true or false
     try:
         button.click()
         return True
     except Exception as e:
         print("Can't press button")
         return False
-
-def printReapeatCycleState(repeatButtonCycle):
-    if repeatButtonCycle % 3 == 0:
-        print("Reapeat off!")
-        return
-    if repeatButtonCycle % 3 == 1:
-        print("Reapeat all!")
-        return
-    print("Reapeat current!")
 
 def main():
     # command = './Chrome/Application/chrome.exe --remote-debugging-port=9222 --user-data-dir="./chromedriver_win32_105/localhost"\n'
@@ -79,19 +76,19 @@ def main():
     muteState = get_element(driver=driver, xpath="/html/body/ytmusic-app/ytmusic-app-layout/ytmusic-player-bar/div[3]/ytmusic-player-expanding-menu/tp-yt-paper-icon-button[1]")
     while 1:
         cmd = input("Give command: ")
-        if cmd == 'n' :
+        if cmd == 'n' :  # next
             if pressButton(buttonNext):
                 print("Next")
             continue
-        if cmd == 'p' :
+        if cmd == 'p' :  # previous
             if pressButton(buttonPrev):
                 print("Previous")
             continue
-        if cmd == 'P' :
+        if cmd == 'P' :  # pause/play
             print(playPauseState.get_attribute('aria-label'))
             pressButton(buttonPlayPause)
             continue
-        if cmd == 'm' :
+        if cmd == 'm' :  # mute/unmute
             if expandMenuState.get_attribute('aria-hidden') == 'true':
                 pressButton(buttonExpandMenu)
             if pressButton(buttonMute) :
@@ -101,19 +98,19 @@ def main():
                 else :
                     print("Mute")
             continue
-        if cmd == 'r' :
+        if cmd == 'r' :  # repeat
             if expandMenuState.get_attribute('aria-hidden') == 'true':
                 pressButton(buttonExpandMenu)
             if pressButton(buttonRepeat) :
                 print(buttonRepeat.get_attribute('title'))
             continue
-        if cmd == 's' :
+        if cmd == 's' :  # shuffle
             if expandMenuState.get_attribute('aria-hidden') == 'true':
                 pressButton(buttonExpandMenu)
             if pressButton(buttonShuffle) :
                 print("Shuffle")
             continue
-        if cmd == 'q':
+        if cmd == 'q':  # quit
             break
         print("Button unrecognised")
 
