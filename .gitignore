@@ -1,2 +1,5 @@
 chromedriver_win32_105/
 Chrome/
+learningGUI.py
+seleniumTest.py
+subprocessTest.py
