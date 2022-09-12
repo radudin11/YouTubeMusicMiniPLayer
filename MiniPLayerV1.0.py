@@ -9,10 +9,12 @@ import os
 import subprocess
 
 
+from selenium.webdriver.support import expected_conditions
+
+from selenium.webdriver.common.action_chains import ActionChains
 
 
-
-def get_element(xpath = "", driver = NULL):
+def get_element_xpath(xpath = "", driver = NULL):
     # searches for an element from the web driver 
     # at the given xpath
     tryAgain = 50
@@ -25,6 +27,34 @@ def get_element(xpath = "", driver = NULL):
             tryAgain -= 1
             time.sleep(1)
     return button
+def get_element_className(className = "", driver = NULL):
+    # searches for an element from the web driver 
+    # at the given xpath
+    tryAgain = 50
+    while tryAgain:
+        try:
+            button = driver.find_element(By.CLASS_NAME, className)
+            tryAgain = 0
+        except Exception as e:
+            print("Element not found!")
+            tryAgain -= 1
+            time.sleep(1)
+    return button
+
+def get_element_id(id = "", driver = NULL):
+    # searches for an element from the web driver 
+    # at the given xpath
+    tryAgain = 50
+    while tryAgain:
+        try:
+            button = driver.find_element(By.ID, id)
+            tryAgain = 0
+        except Exception as e:
+            print("Element not found!")
+            tryAgain -= 1
+            time.sleep(1)
+    return button
+
 
 def driver_setup():
     # sets all the options for the chrome driver, opens it
@@ -64,16 +94,22 @@ def main():
 
     driver = driver_setup()
     print("Setup done!")
-    buttonNext = get_element(driver=driver, xpath="/html/body/ytmusic-app/ytmusic-app-layout/ytmusic-player-bar/div[1]/div/tp-yt-paper-icon-button[5]")
-    buttonPrev = get_element(driver=driver, xpath="/html/body/ytmusic-app/ytmusic-app-layout/ytmusic-player-bar/div[1]/div/tp-yt-paper-icon-button[1]")
-    buttonPlayPause = get_element(driver=driver, xpath="/html/body/ytmusic-app/ytmusic-app-layout/ytmusic-player-bar/div[1]/div/tp-yt-paper-icon-button[3]/tp-yt-iron-icon")
-    buttonMute = get_element(driver=driver, xpath="/html/body/ytmusic-app/ytmusic-app-layout/ytmusic-player-bar/div[3]/ytmusic-player-expanding-menu/tp-yt-paper-icon-button[1]/tp-yt-iron-icon")
-    buttonExpandMenu = get_element(driver=driver, xpath="/html/body/ytmusic-app/ytmusic-app-layout/ytmusic-player-bar/div[3]/div/tp-yt-paper-icon-button[4]/tp-yt-iron-icon")
-    buttonRepeat = get_element(driver=driver, xpath="/html/body/ytmusic-app/ytmusic-app-layout/ytmusic-player-bar/div[3]/ytmusic-player-expanding-menu/tp-yt-paper-icon-button[2]")
-    expandMenuState = get_element(driver=driver, xpath="/html/body/ytmusic-app/ytmusic-app-layout/ytmusic-player-bar/div[3]/ytmusic-player-expanding-menu")
-    buttonShuffle = get_element(driver=driver, xpath="/html/body/ytmusic-app/ytmusic-app-layout/ytmusic-player-bar/div[3]/ytmusic-player-expanding-menu/tp-yt-paper-icon-button[3]/tp-yt-iron-icon")
-    playPauseState = get_element(driver=driver, xpath="/html/body/ytmusic-app/ytmusic-app-layout/ytmusic-player-bar/div[1]/div/tp-yt-paper-icon-button[3]")
-    muteState = get_element(driver=driver, xpath="/html/body/ytmusic-app/ytmusic-app-layout/ytmusic-player-bar/div[3]/ytmusic-player-expanding-menu/tp-yt-paper-icon-button[1]")
+    buttonNext = get_element_xpath(driver=driver, xpath="/html/body/ytmusic-app/ytmusic-app-layout/ytmusic-player-bar/div[1]/div/tp-yt-paper-icon-button[5]")
+    buttonPrev = get_element_xpath(driver=driver, xpath="/html/body/ytmusic-app/ytmusic-app-layout/ytmusic-player-bar/div[1]/div/tp-yt-paper-icon-button[1]")
+    buttonPlayPause = get_element_xpath(driver=driver, xpath="/html/body/ytmusic-app/ytmusic-app-layout/ytmusic-player-bar/div[1]/div/tp-yt-paper-icon-button[3]/tp-yt-iron-icon")
+    buttonMute = get_element_xpath(driver=driver, xpath="/html/body/ytmusic-app/ytmusic-app-layout/ytmusic-player-bar/div[3]/ytmusic-player-expanding-menu/tp-yt-paper-icon-button[1]/tp-yt-iron-icon")
+    #buttonMute = get_element_id(driver=driver, id= "expand-volume")
+    
+    # expandingMenu = driver.find_element(By.XPATH, '//*[@id="expanding-menu"]')
+    # expandVolume = expandingMenu.find_element(By.XPATH, '//*[@id="expand-volume"]')
+    # buttonMute = expandVolume.find_element(By.XPATH, '//*[@id="icon"]')
+
+    buttonExpandMenu = get_element_xpath(driver=driver, xpath="/html/body/ytmusic-app/ytmusic-app-layout/ytmusic-player-bar/div[3]/div/tp-yt-paper-icon-button[4]/tp-yt-iron-icon")
+    buttonRepeat = get_element_xpath(driver=driver, xpath="/html/body/ytmusic-app/ytmusic-app-layout/ytmusic-player-bar/div[3]/ytmusic-player-expanding-menu/tp-yt-paper-icon-button[2]")
+    expandMenuState = get_element_xpath(driver=driver, xpath="/html/body/ytmusic-app/ytmusic-app-layout/ytmusic-player-bar/div[3]/ytmusic-player-expanding-menu")
+    buttonShuffle = get_element_xpath(driver=driver, xpath="/html/body/ytmusic-app/ytmusic-app-layout/ytmusic-player-bar/div[3]/ytmusic-player-expanding-menu/tp-yt-paper-icon-button[3]/tp-yt-iron-icon")
+    playPauseState = get_element_xpath(driver=driver, xpath="/html/body/ytmusic-app/ytmusic-app-layout/ytmusic-player-bar/div[1]/div/tp-yt-paper-icon-button[3]")
+    muteState = get_element_xpath(driver=driver, xpath="/html/body/ytmusic-app/ytmusic-app-layout/ytmusic-player-bar/div[3]/ytmusic-player-expanding-menu/tp-yt-paper-icon-button[1]")
     while 1:
         cmd = input("Give command: ")
         if cmd == 'n' :  # next
@@ -90,7 +126,8 @@ def main():
             continue
         if cmd == 'm' :  # mute/unmute
             if expandMenuState.get_attribute('aria-hidden') == 'true':
-                pressButton(buttonExpandMenu)
+                hover = ActionChains(driver).move_to_element(expandMenuState)
+                hover.perform()
             if pressButton(buttonMute) :
                 time.sleep(0.2)
                 if muteState.get_attribute('aria-pressed') == 'false' :
