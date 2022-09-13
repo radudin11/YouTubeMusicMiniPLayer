@@ -52,8 +52,8 @@ class main :
         tryAgain = 10
         while tryAgain:
             try:
-                labelTitle.config(text=main.songTitle.get_attribute('title'))
-                labelArtist.config(text=main.artist.get_attribute('title'))
+                labelTitle.config(text=main.songTitle.get_attribute('title')[0:40])
+                labelArtist.config(text=main.artist.get_attribute('title')[0:40])
                 labelSongTime.config(text=main.songTime.get_attribute('aria-valuetext'))
                 tryAgain = 0
             except Exception as e:
