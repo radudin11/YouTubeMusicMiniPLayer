@@ -12,6 +12,8 @@ class main :
     global buttonPlayPause
     global songTitle
     global artist
+    global songTime
+    global driver
 
 
     def dark_title_bar(window):
@@ -31,14 +33,14 @@ class main :
                             ct.sizeof(value))
 
     def setUp():
-        driver = driver_setup()
-        print("Setup done!")
-        main.buttonNext = get_element(driver=driver, xpath="/html/body/ytmusic-app/ytmusic-app-layout/ytmusic-player-bar/div[1]/div/tp-yt-paper-icon-button[5]")
-        main.buttonPrev = get_element(driver=driver, xpath="/html/body/ytmusic-app/ytmusic-app-layout/ytmusic-player-bar/div[1]/div/tp-yt-paper-icon-button[1]")
-        main.buttonPlayPause = get_element(driver=driver, xpath="/html/body/ytmusic-app/ytmusic-app-layout/ytmusic-player-bar/div[1]/div/tp-yt-paper-icon-button[3]/tp-yt-iron-icon")
-        main.songTitle = get_element(driver=driver, xpath='/html/body/ytmusic-app/ytmusic-app-layout/ytmusic-player-bar/div[2]/div[2]/yt-formatted-string')
-        main.artist = get_element(driver=driver, xpath='/html/body/ytmusic-app/ytmusic-app-layout/ytmusic-player-bar/div[2]/div[2]/span/span[2]/yt-formatted-string')
+        main.driver = driver_setup()
 
+        main.buttonNext = get_element(driver=main.driver, xpath="/html/body/ytmusic-app/ytmusic-app-layout/ytmusic-player-bar/div[1]/div/tp-yt-paper-icon-button[5]")
+        main.buttonPrev = get_element(driver=main.driver, xpath="/html/body/ytmusic-app/ytmusic-app-layout/ytmusic-player-bar/div[1]/div/tp-yt-paper-icon-button[1]")
+        main.buttonPlayPause = get_element(driver=main.driver, xpath="/html/body/ytmusic-app/ytmusic-app-layout/ytmusic-player-bar/div[1]/div/tp-yt-paper-icon-button[3]/tp-yt-iron-icon")
+        main.songTitle = get_element(driver=main.driver, xpath='/html/body/ytmusic-app/ytmusic-app-layout/ytmusic-player-bar/div[2]/div[2]/yt-formatted-string')
+        main.artist = get_element(driver=main.driver, xpath='/html/body/ytmusic-app/ytmusic-app-layout/ytmusic-player-bar/div[2]/div[2]/span/span[2]/yt-formatted-string')
+        main.songTime = get_element(driver=main.driver, xpath='/html/body/ytmusic-app/ytmusic-app-layout/ytmusic-player-bar/tp-yt-paper-slider')
     def pressPlayPause():
         pressButton(main.buttonPlayPause)
     def pressNext():
@@ -46,10 +48,19 @@ class main :
     def pressPrev():
         pressButton(main.buttonPrev)
 
-    def updateTitle(window, labelTitle, labelArtist):
-        labelTitle.config(text=main.songTitle.get_attribute('title'))
-        labelArtist.config(text=main.artist.get_attribute('title'))
-        window.after(1000, main.updateTitle, window, labelTitle, labelArtist)
+    def updateTitle(window, labelTitle, labelArtist, labelSongTime):
+        tryAgain = 10
+        while tryAgain:
+            try:
+                labelTitle.config(text=main.songTitle.get_attribute('title'))
+                labelArtist.config(text=main.artist.get_attribute('title'))
+                labelSongTime.config(text=main.songTime.get_attribute('aria-valuetext'))
+                tryAgain = 0
+            except Exception as e:
+                main.artist = get_element(driver=main.driver, xpath='/html/body/ytmusic-app/ytmusic-app-layout/ytmusic-player-bar/div[2]/div[2]/span/span[2]/yt-formatted-string')
+                main.songTime = get_element(driver=main.driver, xpath='/html/body/ytmusic-app/ytmusic-app-layout/ytmusic-player-bar/tp-yt-paper-slider')
+                tryAgain -= 1
+        window.after(1000, main.updateTitle, window, labelTitle, labelArtist, labelSongTime)
     def main():
 
         main.setUp()
@@ -59,31 +70,34 @@ class main :
         window.iconphoto(False, tk.PhotoImage(file='images\YTMusicLogoWhiteOnBlack.png'))
         window.title("YouTubeMusicPlayer")
 
-        frame = tk.Frame(master = window, background= "black", width= 300, height = 50)
-        frame.pack(fill=tk.BOTH, expand=True)
+        buttonFrame = tk.Frame(master = window, background= "black", width= 300, height = 50)
+        buttonFrame.pack(fill=tk.BOTH, expand=True)
 
         titleFrame = tk.Frame(master = window, background= "black",height=20, width=100)
         titleFrame.pack(fill=tk.BOTH, expand=True)
 
         lbl_songTitle = tk.Label(background="black", foreground='white', text = main.songTitle.get_attribute('title'),master=titleFrame)
-        lbl_songTitle.pack(fill=tk.BOTH, expand=True, pady=1)
+        lbl_songTitle.pack(fill='x', expand=True, pady=1)
 
         lbl_artist = tk.Label(background="black", foreground='white', text = main.artist.get_attribute('title'),master=titleFrame)
         lbl_artist.pack(fill=tk.BOTH, expand=True, pady=0)
+        
+        lbl_songTime = tk.Label(background="black", foreground='white', text = main.songTime.get_attribute('aria-valuetext'),master=titleFrame)
+        lbl_songTime.pack(side = tk.RIGHT)
 
-        btnPlayPause = tk.Button(background="gray", master=frame, width=10, height=5, text="Play/Pause", borderwidth=5, command=main.pressPlayPause)
+        btnPlayPause = tk.Button(background="gray", master=buttonFrame, width=10, height=5, text="Play/Pause", borderwidth=5, command=main.pressPlayPause)
         # btnPlayPause.grid(row=0, column=1, padx=5, pady=5, sticky='n')
         btnPlayPause.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
         
-        btnPrevious = tk.Button(background="gray", master=frame, width=10, height=5, text="<<", borderwidth=5, command=main.pressPrev)
+        btnPrevious = tk.Button(background="gray", master=buttonFrame, width=10, height=5, text="<<", borderwidth=5, command=main.pressPrev)
         # btnPrevious.grid(row=0, column=0, padx=5, pady=5, sticky='e')
         btnPrevious.place(relx=0, rely=0.5, anchor="w")
         
-        btnNext = tk.Button(background="gray", master=frame, width=10, height=5, text=">>", borderwidth=5, command=main.pressNext)
+        btnNext = tk.Button(background="gray", master=buttonFrame, width=10, height=5, text=">>", borderwidth=5, command=main.pressNext)
         # btnNext.grid(row=0, column=2, padx=5, pady=5, sticky='w')
         btnNext.place(relx=1, rely=0.5, anchor="e")
         
-        main.updateTitle(window ,lbl_songTitle, lbl_artist)
+        main.updateTitle(window ,lbl_songTitle, lbl_artist, lbl_songTime)
 
         window.mainloop()
 
