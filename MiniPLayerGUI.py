@@ -52,8 +52,8 @@ class main :
         tryAgain = 10
         while tryAgain:
             try:
-                labelTitle.config(text=main.songTitle.get_attribute('title')[0:40])
-                labelArtist.config(text=main.artist.get_attribute('title')[0:40])
+                labelTitle.config(text=main.songTitle.get_attribute('title'))
+                labelArtist.config(text=main.artist.get_attribute('title'))
                 labelSongTime.config(text=main.songTime.get_attribute('aria-valuetext'))
                 tryAgain = 0
             except Exception as e:
@@ -77,10 +77,10 @@ class main :
         titleFrame.pack(fill=tk.BOTH, expand=True)
 
         lbl_songTitle = tk.Label(background="black", foreground='white', text = main.songTitle.get_attribute('title'),master=titleFrame)
-        lbl_songTitle.pack(fill='x', expand=True, pady=1)
+        lbl_songTitle.pack(fill='x', expand=False, pady=1)
 
         lbl_artist = tk.Label(background="black", foreground='white', text = main.artist.get_attribute('title'),master=titleFrame)
-        lbl_artist.pack(fill=tk.BOTH, expand=True, pady=0)
+        lbl_artist.pack(fill=tk.BOTH, expand=False, pady=0)
         
         lbl_songTime = tk.Label(background="black", foreground='white', text = main.songTime.get_attribute('aria-valuetext'),master=titleFrame)
         lbl_songTime.pack(side = tk.RIGHT)
