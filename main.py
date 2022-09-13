@@ -28,6 +28,7 @@ class main :
 
         main.setUp()
         window = tk.Tk()
+        window.title("YouTubeMusicPlayer")
 
         frame = tk.Frame(master = window, background= "black", width= 500, height = 100)
         frame.pack(fill=tk.BOTH, expand=True)
